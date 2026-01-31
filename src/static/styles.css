@@ -73,18 +73,16 @@ body.dark-mode {
   font-family: Arial, sans-serif;
 }
 
-/* Smooth transition for dark mode */
-body,
-header,
-section,
-.activity-card,
-.sidebar-filters,
-.modal-content,
-button,
-input,
-.search-box input,
-.search-box button {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+/* Smooth transition for dark mode - only if user hasn't requested reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  header,
+  section,
+  .activity-card,
+  .sidebar-filters,
+  .modal-content {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
 }
 
 body {

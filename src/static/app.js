@@ -34,8 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.toggle("dark-mode");
     const isDarkMode = document.body.classList.contains("dark-mode");
     
-    // Update icon
-    darkModeIcon.textContent = isDarkMode ? "☀️" : "🌙";
+    // Update icon if element exists
+    if (darkModeIcon) {
+      darkModeIcon.textContent = isDarkMode ? "☀️" : "🌙";
+    }
     
     // Save preference
     localStorage.setItem("darkMode", isDarkMode ? "enabled" : "disabled");
@@ -46,7 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const darkMode = localStorage.getItem("darkMode");
     if (darkMode === "enabled") {
       document.body.classList.add("dark-mode");
-      darkModeIcon.textContent = "☀️";
+      if (darkModeIcon) {
+        darkModeIcon.textContent = "☀️";
+      }
     }
   }
 
@@ -54,7 +58,9 @@ document.addEventListener("DOMContentLoaded", () => {
   loadDarkModePreference();
   
   // Add event listener for dark mode toggle
-  darkModeToggle.addEventListener("click", toggleDarkMode);
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+  }
 
   // Activity categories with corresponding colors
   const activityTypes = {
