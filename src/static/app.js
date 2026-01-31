@@ -472,6 +472,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Function to escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // Function to generate shareable link for an activity
   function generateShareableLink(activityName) {
     const baseUrl = window.location.origin + window.location.pathname;
@@ -496,11 +503,16 @@ document.addEventListener("DOMContentLoaded", () => {
         url = `mailto:?subject=${encodeURIComponent('Check out this activity!')}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
         break;
       case 'copy':
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          showMessage('Link copied to clipboard!', 'success');
-        }).catch(() => {
-          showMessage('Failed to copy link', 'error');
-        });
+        // Check if clipboard API is available
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            showMessage('Link copied to clipboard!', 'success');
+          }).catch(() => {
+            showMessage('Failed to copy link. Please copy manually: ' + shareUrl, 'error');
+          });
+        } else {
+          showMessage('Clipboard not supported. Link: ' + shareUrl, 'info');
+        }
         return;
     }
     
@@ -557,18 +569,19 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
 
     // Create share buttons
+    const escapedName = escapeHtml(name);
     const shareButtons = `
       <div class="share-buttons">
-        <button class="share-button" data-platform="facebook" data-activity="${name}" title="Share on Facebook">
+        <button class="share-button" data-platform="facebook" data-activity="${escapedName}" title="Share on Facebook" aria-label="Share ${escapedName} on Facebook">
           📘
         </button>
-        <button class="share-button" data-platform="twitter" data-activity="${name}" title="Share on Twitter">
+        <button class="share-button" data-platform="twitter" data-activity="${escapedName}" title="Share on Twitter" aria-label="Share ${escapedName} on Twitter">
           🐦
         </button>
-        <button class="share-button" data-platform="email" data-activity="${name}" title="Share via Email">
+        <button class="share-button" data-platform="email" data-activity="${escapedName}" title="Share via Email" aria-label="Share ${escapedName} via Email">
           ✉️
         </button>
-        <button class="share-button" data-platform="copy" data-activity="${name}" title="Copy link">
+        <button class="share-button" data-platform="copy" data-activity="${escapedName}" title="Copy link" aria-label="Copy link to ${escapedName}">
           🔗
         </button>
       </div>
