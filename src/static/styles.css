@@ -238,6 +238,42 @@ section h3 {
   background-color: var(--success);
 }
 
+/* Share buttons */
+.share-buttons {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+  padding: 8px 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  justify-content: center;
+}
+
+.share-button {
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  padding: 0;
+}
+
+.share-button:hover {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+
+.share-button:active {
+  transform: scale(0.95);
+}
+
 /* Participants list */
 .participants-list {
   margin-top: 8px;
