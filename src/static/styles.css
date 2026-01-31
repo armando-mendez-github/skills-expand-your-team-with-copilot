@@ -750,6 +750,61 @@ footer {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
+/* Difficulty Filter Styles */
+.difficulty-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.difficulty-filter {
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.difficulty-filter.active {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary-dark);
+}
+
+.difficulty-filter:hover {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+/* Difficulty Badge Styles */
+.difficulty-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.difficulty-beginner {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.difficulty-intermediate {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.difficulty-advanced {
+  background-color: #ffebee;
+  color: #c62828;
 /* Dark mode toggle button */
 #dark-mode-toggle {
   background-color: rgba(255, 255, 255, 0.2);
