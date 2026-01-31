@@ -509,6 +509,55 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Function to escape HTML to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Function to generate shareable link for an activity
+  function generateShareableLink(activityName) {
+    const baseUrl = window.location.origin + window.location.pathname;
+    return `${baseUrl}?activity=${encodeURIComponent(activityName)}`;
+  }
+
+  // Function to share activity on social media
+  function shareActivity(platform, activityName, description) {
+    const shareUrl = generateShareableLink(activityName);
+    const shareText = `Check out this activity at Mergington High School: ${activityName} - ${description}`;
+    
+    let url = '';
+    
+    switch(platform) {
+      case 'facebook':
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'twitter':
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+        break;
+      case 'email':
+        url = `mailto:?subject=${encodeURIComponent('Check out this activity!')}&body=${encodeURIComponent(shareText + '\n\n' + shareUrl)}`;
+        break;
+      case 'copy':
+        // Check if clipboard API is available
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            showMessage('Link copied to clipboard!', 'success');
+          }).catch(() => {
+            showMessage('Failed to copy link. Please copy manually: ' + shareUrl, 'error');
+          });
+        } else {
+          showMessage('Clipboard not supported. Link: ' + shareUrl, 'info');
+        }
+        return;
+    }
+    
+    if (url) {
+      window.open(url, '_blank', 'width=600,height=400');
+    }
+  }
+
   // Function to render a single activity card
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
@@ -556,6 +605,25 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Create share buttons
+    const escapedName = escapeHtml(name);
+    const shareButtons = `
+      <div class="share-buttons">
+        <button class="share-button" data-platform="facebook" data-activity="${escapedName}" title="Share on Facebook" aria-label="Share ${escapedName} on Facebook">
+          📘
+        </button>
+        <button class="share-button" data-platform="twitter" data-activity="${escapedName}" title="Share on Twitter" aria-label="Share ${escapedName} on Twitter">
+          🐦
+        </button>
+        <button class="share-button" data-platform="email" data-activity="${escapedName}" title="Share via Email" aria-label="Share ${escapedName} via Email">
+          ✉️
+        </button>
+        <button class="share-button" data-platform="copy" data-activity="${escapedName}" title="Copy link" aria-label="Copy link to ${escapedName}">
+          🔗
+        </button>
+      </div>
+    `;
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -565,6 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
+      ${shareButtons}
       <div class="participants-list">
         <h5>Current Participants:</h5>
         <ul>
@@ -623,6 +692,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handlers for share buttons
+    const shareButtonElements = activityCard.querySelectorAll(".share-button");
+    shareButtonElements.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        const platform = button.dataset.platform;
+        const activityName = button.dataset.activity;
+        shareActivity(platform, activityName, details.description);
+      });
+    });
 
     activitiesList.appendChild(activityCard);
   }
